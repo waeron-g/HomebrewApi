@@ -35,6 +35,7 @@ class Router
          * Проверка метода на доступ по методу запроса
          * Выполнение метода
          */
+        var_dump($controller);
         return self::notFound("Перепиши мой метод!");
     }
 
@@ -43,7 +44,12 @@ class Router
      */
     private static function getController( $path)
     {
-        return "Controller";
+        $path = explode("/", $path);
+        $controller = $path[1];
+        if(!empty($controller)){
+            return $controller;
+        }
+        return 'Контроллер не найден';
     }
 
     /*
