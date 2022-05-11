@@ -8,14 +8,15 @@ class mainController
 
     public function  __construct()
     {
-        require $this->classModel;
-        $this->model = new $this->classModel;
+        //require $this->classModel;
+        //$this->model = new $this->classModel;
     }
 
     public function   actionIndex()
     {
-
-        $model = new $this->model;
+        //$model = new $this->model;
+        var_dump('gpkvmrpkgv');
+        die;
         return $model->get(0);
     }
 

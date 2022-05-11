@@ -29,14 +29,32 @@ class Router
     private static function doAction($controller, $method, $action)
     {
         /*
-         * Проверка файла и класса на существование
+         * Проверка файла и класса на существование - check
          * Создание экземпляра класса
          * Проверка метода на существование
          * Проверка метода на доступ по методу запроса
          * Выполнение метода
          */
+        $controller_path = "Controllers/$controller.php";
+        if (file_exists($controller_path)){
+            require (__DIR__.'/../'.$controller_path);
+            $controller = new $controller();
+            if (is_array($action)){
+                if (method_exists($controller, $action["action"])){
+                    $action_id = $action["id"];
+                    $action_name = $action["action"];
+                    return ($controller->$action_name($action_id));
+                }
+            }
+            else {
+                if (method_exists($controller, $action)){
+                    return ($controller->$action());
+                }
+            }
+        }
         var_dump($controller);
         return self::notFound("Перепиши мой метод!");
+
     }
 
     /*
@@ -57,18 +75,53 @@ class Router
      */
     private static function getMethod()
     {
-        return "Method";
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            return 0;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            return 1;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+            return 2;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            return 3;
+        }
     }
 
     /*
      * здесь нужно реализовать метод, который в зависимости от метода запроса будет либо пускать в действие, либо вызывать ошибку 404
      */
-    private static function getAction($method, $path)
-    {
-        return "Action";
+    private static 
+    function getAction($method, $path) {
+        $path = explode("/", $path);
+        if (count($path)>2){
+            $action = $path[2];
+            $proverka = intval($action);
+            if ($proverka>0){
+                if ($method == 2){
+                    return array('action' => 'actionUpdate', 'id' => $proverka);
+                }
+                if ($method == 3){
+                    return array('action' => 'actionDelete', 'id' => $proverka);;
+                }
+                if ($method == 1){
+                    return array('action' => 'actionGet', 'id' => $proverka);;
+                }
+                return $proverka; 
+            }
+            return $action;
+        }
+        if ($method == 0){
+            return 'actionAdd';
+        }
+        if ($method == 1){
+            return 'actionIndex';
+        }
     }
 
-    public static function notFound($path)
+    public static 
+    function notFound($path)
     {
         http_response_code(404);
         return ["code" => 404, "error" => "page not found on ". $path];
