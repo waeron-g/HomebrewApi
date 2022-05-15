@@ -4,19 +4,17 @@
 class mainController
 {
     protected $classModel = "";
-    private $model = null;
+    protected $model = null;
 
     public function  __construct()
     {
-        //require $this->classModel;
-        //$this->model = new $this->classModel;
+        require  __DIR__."/../Models/".$this->classModel.".php";
+        $this->model = new $this->classModel;
     }
 
     public function   actionIndex()
     {
-        //$model = new $this->model;
-        var_dump('gpkvmrpkgv');
-        die;
+        $model = new $this->model;
         return $model->get(0);
     }
 
@@ -29,7 +27,7 @@ class mainController
     public function actionAdd()
     {
         $model = new $this->model;
-        return $model->add();
+        return $model->post();
     }
 
     public function actionUpdate($id)

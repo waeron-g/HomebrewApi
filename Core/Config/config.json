@@ -1,7 +1,7 @@
 {
-    "dbhost": "your db host",
-    "dbname": "your db name",
-    "dbuser": "your db user",
-    "dbpass": "your db pass"
+    "dbhost": "127.0.0.1",
+    "dbname": "raiden",
+    "dbuser": "root",
+    "dbpass": "root"
 
 }

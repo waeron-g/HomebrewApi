@@ -35,6 +35,8 @@ class Router
          * Проверка метода на доступ по методу запроса
          * Выполнение метода
          */
+        if ($method === null)
+            return self::notFound(500,"Неверный метод обращения");
         $controller_path = "Controllers/$controller.php";
         if (file_exists($controller_path)){
             require (__DIR__.'/../'.$controller_path);
@@ -52,8 +54,7 @@ class Router
                 }
             }
         }
-        var_dump($controller);
-        return self::notFound("Перепиши мой метод!");
+        return self::notFound(404, "Страница не найдена");
 
     }
 
@@ -65,6 +66,7 @@ class Router
         $path = explode("/", $path);
         $controller = $path[1];
         if(!empty($controller)){
+            $controller = ucfirst(strtolower($controller)). "Controller";
             return $controller;
         }
         return 'Контроллер не найден';
@@ -121,10 +123,10 @@ class Router
     }
 
     public static 
-    function notFound($path)
+    function notFound($code, $message)
     {
-        http_response_code(404);
-        return ["code" => 404, "error" => "page not found on ". $path];
+        http_response_code($code);
+        return ["code" => $code, "error" => $message];
     }
 
 }
