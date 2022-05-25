@@ -50,9 +50,10 @@ class mainModel
         if ($id > 0)
             $sql = "SELECT ".$this->prepareFields()." FROM ". $this->tableName ." WHERE id = ". $id;
         else
-            $sql = "SELECT ".$this->prepareFields()." FROM ". $this->tableName.$this->search();
+            $sql = "SELECT ".$this->prepareFields()." FROM ". $this->tableName. $this->search();
         $data = $this->db->query($sql);
-        $data = $data->fetchAll(PDO::FETCH_OBJ);
+        if ($data)
+            $data = $this->db->query($sql)->fetchAll(PDO::FETCH_OBJ);
         return ['code' => 200, 'data' => !empty($data) ? $data : null, 'message' => "Получены данные таблицы"];
     }
 
@@ -192,7 +193,8 @@ class mainModel
                 }
             }
         }
-        return $query.implode(" AND ", $fields);
+        $query = !empty($fields)? $query.implode(" AND ", $fields): null ;
+        return $query;
 
     }
 
